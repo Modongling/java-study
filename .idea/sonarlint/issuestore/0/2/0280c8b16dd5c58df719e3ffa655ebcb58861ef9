@@ -1,0 +1,18 @@
+
+7
+java:S1170	"!Make this final field static too.(€–Àí
+O
+java:S1854"9Remove this useless assignment to local variable "value".(â—ìç
+N
+java:S1117"8Rename "value" which hides the field declared at line 9.(â—ìç
+<
+java:S1170"!Make this final field static too.(ò»®ùÿÿÿÿ
+T
+java:S1854"9Remove this useless assignment to local variable "value".(ïÕÇúÿÿÿÿ
+T
+java:S1117"9Rename "value" which hides the field declared at line 13.(ïÕÇúÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(–ûÅ¿
+E
+java:S1481"*Remove this unused "value" local variable.(ïÕÇúÿÿÿÿ
+@
+java:S1481"*Remove this unused "value" local variable.(â—ìç
