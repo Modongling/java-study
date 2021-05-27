@@ -4,6 +4,7 @@ import com.my.study.stream.entity.Dish;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -77,7 +78,7 @@ public class StreamDemo {
     }
 
     /**
-     * 逃过元素
+     * 跳过元素
      * @param dishes
      * @return
      */
@@ -86,5 +87,110 @@ public class StreamDemo {
                 .filter(dish -> dish.getCalories() > 300)
                 .skip(2)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * obj -- name
+     * @param dishes
+     * @return
+     */
+    public static List<String> mapDemo(List<Dish> dishes) {
+        return dishes.stream()
+                .map(Dish::getName)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * flatMap 把每个元素都映射成一个流
+     * @return
+     */
+    public static List<String> flatMapDemo() {
+        String [] strs = {"Hello", "world"};
+        return Arrays.stream(strs)
+                .map(word -> word.split(""))
+                .flatMap(Arrays::stream)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public static List<int[]> flatMapDemo2() {
+        List<Integer> num1 = Arrays.asList(1, 2, 3);
+        List<Integer> num2 = Arrays.asList(3, 4);
+        return num1.stream()
+                .flatMap(i -> num2.stream()
+                .map(j -> new int[] {i , j}))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 匹配
+     * anyMatch()
+     * allMatch()
+     * noneMatch()
+     * @param dishes
+     * @return
+     */
+    public static boolean matchDemo(List<Dish> dishes) {
+        return dishes.stream()
+                .anyMatch(Dish::isVegetarian);
+    }
+
+    /**
+     * findAny ---> Optional
+     * @param dishes
+     * @return
+     */
+    public static boolean findDemo(List<Dish> dishes) {
+        return dishes.stream()
+                .filter(Dish::isVegetarian)
+                .findAny().isPresent();
+    }
+
+    /**
+     * Optional值是否存在
+     * @param dishes
+     */
+    public static void optionalDemo(List<Dish> dishes) {
+        dishes.stream()
+                .filter(Dish::isVegetarian)
+                .findAny()
+                .ifPresent(dish -> System.out.println(dish.getName()));
+    }
+
+    public static Integer findDemo2() {
+        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+        Optional<Integer> first = nums.stream()
+                .map(n -> n * n)
+                .filter(n -> n % 3 == 0)
+                .findFirst();
+        return first.orElse(0);
+    }
+
+    /**
+     * BinaryOperator<T>
+     * BiFunction<T,T,T>
+     * 归约 --- 将流归约成一个值
+     */
+    public Integer reduceDemo() {
+        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+       return nums.stream()
+                .reduce(0, (a, b) -> a + b);
+    }
+
+    public static void reduceDemo2() {
+        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+        int sum = nums.stream().reduce(0, Integer::sum);
+        Optional<Integer> sumOpt = nums.stream().reduce(Integer::sum);
+        Optional<Integer> max = nums.stream().reduce(Integer::max);
+        Optional<Integer> min = nums.stream().reduce(Integer::min);
+    }
+
+    public static void reduceDemo3(List<Dish> dishes) {
+        //dishes.stream().count();
+        //统计某个物品
+        int count = dishes.stream()
+                .map(dish -> 1)
+                .reduce(0, Integer::sum);
+
     }
 }
