@@ -2,10 +2,17 @@ package com.my.study.stream;
 
 import com.my.study.stream.entity.Dish;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author mdl
@@ -191,6 +198,112 @@ public class StreamDemo {
         int count = dishes.stream()
                 .map(dish -> 1)
                 .reduce(0, Integer::sum);
-
     }
+
+    /**
+     * Stream<Integer> --- int
+     * @param dishes
+     * @return
+     */
+    public static Integer basicTypeMapDemo(List<Dish> dishes) {
+        return dishes.stream()
+                .mapToInt(Dish::getCalories)
+                .sum();
+    }
+
+    /**
+     * Int --- Stream<Integer>
+     * @param dishes
+     * @return
+     */
+    public static Stream<Integer> boxDemo(List<Dish> dishes) {
+        return dishes.stream()
+                //IntStream
+                .mapToInt(Dish::getCalories)
+                .boxed();
+    }
+
+    /**
+     * Optional with type
+     * @param dishes
+     */
+    public static void optionalTypeDemo(List<Dish> dishes) {
+        OptionalInt max = dishes.stream()
+                .mapToInt(Dish::getCalories)
+                .max();
+        int realMax = max.orElse(1);
+    }
+
+    /**
+     * range()
+     * rangeClosed()
+     */
+    public static void rangeDemo() {
+        //[1,100]
+        IntStream evenNums = IntStream.rangeClosed(1, 100)
+                .filter(n -> n % 2 == 0);
+        System.out.println(evenNums.count());
+    }
+
+    public static void triples() {
+        Stream<int []> tripeStream = IntStream.rangeClosed(1, 100)
+                .boxed()
+                //100个流中取一个a
+                .flatMap(a ->
+                        IntStream.rangeClosed(a, 100)
+                .filter(b -> Math.sqrt(a * a + b * b) % 1 == 0)
+                        .mapToObj(b ->
+                                new int[] {a, b, (int)Math.sqrt(a * a + b * b)}));
+
+        tripeStream.limit(3).forEach(t -> System.out.println(t[0] + ", " + t[1] + ", " + t[2]));
+    }
+
+    /**
+     * 创建流
+     * Stream.ofNullable()
+     */
+    public static void buildStream() {
+        Stream<String> stream = Stream.of("Hello", "world");
+        stream.map(String::toUpperCase).forEach(System.out::println);
+        String str = System.getProperty("home");
+        Stream<String> sStr = str == null ? Stream.empty() : Stream.of(str);
+        //数组
+        int [] nums = {1, 2, 3};
+        int sum = Arrays.stream(nums).sum();
+        //文件
+        long words = 0;
+        try(Stream<String> lines = Files.lines(Paths.get("data.txt"), Charset.defaultCharset())) {
+            words = lines.flatMap(line -> Arrays.stream(line.split("")))
+                    .distinct()
+                    .count();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 无限流
+     * 9
+     * iterate（seed, condition, action）
+     * takeWhile(condition)
+     */
+    public static void unlimitedStream() {
+        Stream.iterate(0, n -> n + 2)
+                //通过limit现在无限流
+                .limit(10)
+                .forEach(System.out::println);
+
+        //斐波那契
+        Stream.iterate(new int[] {0, 1},
+                t -> new int[]{t[1], t[0] + t[1]})
+                .limit(20)
+                .forEach(t -> System.out.println("(" + t[0] + "," + t[1] + ")"));
+
+        //generate
+        Stream.generate(Math::random)
+                .limit(5)
+                .forEach(System.out::println);
+    }
+
+
 }
