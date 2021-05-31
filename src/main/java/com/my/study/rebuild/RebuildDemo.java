@@ -416,13 +416,29 @@ public class RebuildDemo {
         System.out.println(product3);
     }
 
+    /**
+     * 日志调试
+     */
+    public static void logLambda() {
+       List<Integer> nums = Arrays.asList(2, 3, 4, 5);
+       nums.stream()
+               .peek(x -> System.out.println("from stream:" + x))
+               .map(x -> x + 17)
+               .peek(x -> System.out.println("after map:" + x))
+               .filter(x -> x % 2 == 0)
+               .limit(3)
+               .peek(x -> System.out.println("after limit:" + x))
+               .forEach(System.out::println);
+    }
+
 
     public static void main(String[] args) {
-        strategyDemo();
-        templateLambdaCase();
-        observerDemo();
-        chainDemo();
-        factoryDemo();
+//        strategyDemo();
+//        templateLambdaCase();
+//        observerDemo();
+//        chainDemo();
+//        factoryDemo();
+        logLambda();
     }
 
 
