@@ -23,4 +23,12 @@ public class Order {
     public double getValue() {
         return trades.stream().mapToDouble(Trade::getPrice).sum();
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "customer='" + customer + '\'' +
+                ", trades=" + trades +
+                '}';
+    }
 }
