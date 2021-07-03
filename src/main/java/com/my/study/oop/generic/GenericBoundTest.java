@@ -14,7 +14,7 @@ public class GenericBoundTest {
     }
 
     /**
-     * 下界陪陪，传入Integer或者对应的父类
+     * 下界匹配，传入Integer或者对应的父类
      * @param nums
      * @return
      */
